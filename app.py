@@ -67,16 +67,22 @@ def convert_mp3_to_ogg():
         output_path = input_path.replace(".mp3", ".ogg")
 
         # Convert MP3 → OGG Opus using ffmpeg
+        # WhatsApp PTT strict requirements: 
+        # libopus, avoid metadata (-map_metadata -1), specific frame size and VBR.
         result = subprocess.run(
             [
                 "ffmpeg",
-                "-y",                  # Overwrite output without asking
-                "-i", input_path,      # Input file
-                "-c:a", "libopus",     # Opus codec (required for WhatsApp PTT)
-                "-b:a", "64k",         # Bitrate (64kbps is good for voice)
-                "-ar", "48000",        # Sample rate (Opus standard)
-                "-ac", "1",            # Mono audio (voice messages are mono)
-                "-application", "voip",# Optimized for voice
+                "-y",                  
+                "-i", input_path,      
+                "-c:a", "libopus",     
+                "-b:a", "64k",         
+                "-ar", "48000",
+                "-ac", "1",
+                "-vbr", "on",
+                "-compression_level", "10",
+                "-frame_duration", "20",
+                "-application", "voip",
+                "-map_metadata", "-1", # Critical: strip metadata
                 output_path
             ],
             capture_output=True,
