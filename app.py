@@ -74,10 +74,12 @@ def convert_mp3_to_ogg():
                 "ffmpeg",
                 "-y",                  
                 "-i", input_path,      
+                "-vn",                 # No video
                 "-c:a", "libopus",     
-                "-b:a", "64k",         
+                "-b:a", "48k",         # 48k is widely used for WA
                 "-ar", "48000",
                 "-ac", "1",
+                "-f", "opus",          # Force OPUS format structure
                 "-vbr", "on",
                 "-compression_level", "10",
                 "-frame_duration", "20",
